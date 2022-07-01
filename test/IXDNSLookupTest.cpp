@@ -19,13 +19,11 @@ TEST_CASE("dns", "[net]")
         auto dnsLookup = std::make_shared<DNSLookup>("www.google.com", 80);
 
         std::string errMsg;
-        struct addrinfo* res;
+        const struct addrinfo* res;
 
         res = dnsLookup->resolve(errMsg, [] { return false; });
         std::cerr << "Error message: " << errMsg << std::endl;
         REQUIRE(res != nullptr);
-
-        dnsLookup->release(res);
     }
 
     SECTION("Test resolving a non-existing hostname")
@@ -33,7 +31,7 @@ TEST_CASE("dns", "[net]")
         auto dnsLookup = std::make_shared<DNSLookup>("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", 80);
 
         std::string errMsg;
-        struct addrinfo* res = dnsLookup->resolve(errMsg, [] { return false; });
+        const struct addrinfo* res = dnsLookup->resolve(errMsg, [] { return false; });
         std::cerr << "Error message: " << errMsg << std::endl;
         REQUIRE(res == nullptr);
     }
@@ -44,7 +42,7 @@ TEST_CASE("dns", "[net]")
 
         std::string errMsg;
         // The callback returning true means we are requesting cancellation
-        struct addrinfo* res = dnsLookup->resolve(errMsg, [] { return true; });
+        const struct addrinfo* res = dnsLookup->resolve(errMsg, [] { return true; });
         std::cerr << "Error message: " << errMsg << std::endl;
         REQUIRE(res == nullptr);
     }

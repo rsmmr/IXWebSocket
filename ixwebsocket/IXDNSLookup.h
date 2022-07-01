@@ -25,13 +25,11 @@ namespace ix
     {
     public:
         DNSLookup(const std::string& hostname, int port, int64_t wait = DNSLookup::kDefaultWait);
-        ~DNSLookup() = default;
+        ~DNSLookup();
 
-        struct addrinfo* resolve(std::string& errMsg,
-                                 const CancellationRequest& isCancellationRequested,
-                                 bool cancellable = true);
-
-        void release(struct addrinfo* addr);
+        const struct addrinfo* resolve(std::string& errMsg,
+                                       const CancellationRequest& isCancellationRequested,
+                                       bool cancellable = true);
 
     private:
         struct addrinfo* resolveCancellable(std::string& errMsg,

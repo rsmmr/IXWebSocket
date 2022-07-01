@@ -916,7 +916,7 @@ namespace ix
         auto dnsLookup = std::make_shared<DNSLookup>(hostname, 80);
 
         std::string errMsg;
-        struct addrinfo* res;
+        const struct addrinfo* res;
 
         res = dnsLookup->resolve(errMsg, [] { return false; });
 

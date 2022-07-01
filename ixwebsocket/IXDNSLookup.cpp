@@ -44,6 +44,11 @@ namespace ix
         ;
     }
 
+    DNSLookup::~DNSLookup()
+    {
+        if (_res) freeaddrinfo(_res);
+    }
+
     struct addrinfo* DNSLookup::getAddrInfo(const std::string& hostname,
                                             int port,
                                             std::string& errMsg)
@@ -66,17 +71,12 @@ namespace ix
         return res;
     }
 
-    struct addrinfo* DNSLookup::resolve(std::string& errMsg,
-                                        const CancellationRequest& isCancellationRequested,
-                                        bool cancellable)
+    const struct addrinfo* DNSLookup::resolve(std::string& errMsg,
+                                              const CancellationRequest& isCancellationRequested,
+                                              bool cancellable)
     {
         return cancellable ? resolveCancellable(errMsg, isCancellationRequested)
                            : resolveUnCancellable(errMsg, isCancellationRequested);
-    }
-
-    void DNSLookup::release(struct addrinfo* addr)
-    {
-        freeaddrinfo(addr);
     }
 
     struct addrinfo* DNSLookup::resolveUnCancellable(
@@ -184,6 +184,7 @@ namespace ix
     void DNSLookup::setRes(struct addrinfo* addr)
     {
         std::lock_guard<std::mutex> lock(_resMutex);
+        if (_res) freeaddrinfo(_res);
         _res = addr;
     }
 
